@@ -28,6 +28,12 @@ describe 'articles/show' do
       rendered.should_not have_link('edit article')
     end
 
+    if 'should show article vote content' do
+        render
+        rendered.should have_content("Vote value: #{@article.votevalue}"
+# test for vote up/down links
+    end
+
   end
 
   context 'user is signed in' do
