@@ -30,6 +30,8 @@ describe 'articles/show' do
       rendered.should have_content("Last updated #{time_ago_in_words(@article.updated_at)}")
       rendered.should have_text(@article.tag_list.join(', '))
       rendered.should_not have_link('edit article')
+      rendered.should_not have_link('Vote up')
+      rendered.should_not have_link('Vote down')
     end
 
     it 'should show article vote content' do
