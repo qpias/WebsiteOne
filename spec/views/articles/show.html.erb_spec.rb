@@ -4,6 +4,8 @@ describe 'articles/show' do
   before(:each) do
     @user = stub_model(User, display_name: 'Thomas')
     @author = @user
+    downvotes = [stub_model(ActsAsVotable::Vote),stub_model(ActsAsVotable::Vote)]
+    upvotes = [stub_model(ActsAsVotable::Vote)]
     @article =  stub_model(Article,
                            :title => "Ruby article",
                            :content => "My Ruby content",
@@ -11,6 +13,8 @@ describe 'articles/show' do
                            :user => @user,
                            :created_at => Time.now,
                            :updated_at => Time.now)
+    @article.stub(:upvotes).and_return(upvotes)
+    @article.stub(:downvotes).and_return(downvotes)
   end
 
   context 'user is not signed in' do
@@ -28,9 +32,9 @@ describe 'articles/show' do
       rendered.should_not have_link('edit article')
     end
 
-    if 'should show article vote content' do
+    it 'should show article vote content' do
         render
-        rendered.should have_content("Vote value: #{@article.votevalue}"
+        rendered.should have_content("Vote value: #{@article.upvotes.size-@article.downvotes.size}")
 # test for vote up/down links
     end
 
@@ -45,6 +49,13 @@ describe 'articles/show' do
       render
       rendered.should have_link('edit article')
     end
+
+    it 'renders the vote links' do
+      render
+      rendered.should have_link('Vote up')
+      rendered.should have_link('Vote down')
+    end
+
   end
 
 end
